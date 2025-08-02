@@ -5,6 +5,53 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Chatbase Chatbot</title>
+  <style>
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+
+    iframe {
+      border: none;
+      width: 100%;
+      height: 100%;
+    }
+
+    .error-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      text-align: center;
+      padding: 20px;
+      background: #f8f8f8;
+    }
+
+    .error-container p {
+      font-size: 18px;
+      color: #333;
+    }
+
+    .error-container a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    .error-container a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <iframe src="https://www.chatbase.co/chatbot-iframe/WsStgk1iZgU3aSbtlyysv"
+      allow="clipboard-write; microphone"></iframe>
+  </div>
   <script>
     window.addEventListener("DOMContentLoaded", async () => {
       const tg = window.Telegram.WebApp;
@@ -13,12 +60,15 @@
       console.log(JSON.stringify(tg.initDataUnsafe));
 
       if (!userId) {
-        alert("⚠️ Telegram foydalanuvchi aniqlanmadi.");
+        appContainer.innerHTML = `
+          <div class="error-container">
+            <p>⚠️ Telegram user not detected. Please open via Telegram.</p>
+          </div>`;
         tg.close();
         return;
       }
 
-      // Server call, only if userId exists
+      // Server call to check subscription
       try {
         const res = await fetch("https://c14cf670a1b7.ngrok-free.app/check-subscription", {
           method: "POST",
@@ -28,36 +78,22 @@
 
         const data = await res.json();
         if (!data.isSubscribed) {
-          alert("⛔ Iltimos, avval kanalga a'zo bo'ling: @IkromAbdulahad");
+          appContainer.innerHTML = `
+            <div class="error-container">
+              <p>⛔ Please subscribe to our channel: <br>
+              <a href="https://t.me/IkromAbdulahad">@IkromAbdulahad</a></p>
+            </div>`;
           tg.close();
         }
       } catch (err) {
-        alert("❗ Tekshirishda xatolik: " + err.message);
+        appContainer.innerHTML = `
+          <div class="error-container">
+            <p>❗ Error checking subscription: ${err.message}</p>
+          </div>`;
         tg.close();
       }
     });
   </script>
-
-  <style>
-    body,
-    html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      overflow: hidden;
-    }
-
-    iframe {
-      border: none;
-      width: 100%;
-      height: 100%;
-    }
-  </style>
-</head>
-
-<body>
-  <iframe src="https://www.chatbase.co/chatbot-iframe/WsStgk1iZgU3aSbtlyysv"
-    allow="clipboard-write; microphone"></iframe>
-</body>
+  </body>
 
 </html>
