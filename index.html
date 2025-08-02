@@ -13,11 +13,12 @@
       console.log(JSON.stringify(tg.initDataUnsafe));
 
       if (!userId) {
-        alert("Telegram foydalanuvchi aniqlanmadi.");
+        alert("⚠️ Telegram foydalanuvchi aniqlanmadi.");
         tg.close();
         return;
       }
 
+      // Server call, only if userId exists
       try {
         const res = await fetch("https://c14cf670a1b7.ngrok-free.app/check-subscription", {
           method: "POST",
@@ -31,11 +32,12 @@
           tg.close();
         }
       } catch (err) {
-        alert("❗ Tekshirishda xatolik. Keyinroq urinib ko'ring.");
+        alert("❗ Tekshirishda xatolik: " + err.message);
         tg.close();
       }
     });
   </script>
+
   <style>
     body,
     html {
