@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chatbase Chatbot</title>
+  <script>
+    window.addEventListener("DOMContentLoaded", async () => {
+      const tg = window.Telegram.WebApp;
+      tg.ready();
+      const userId = tg.initDataUnsafe?.user?.id;
+
+      if (!userId) {
+        alert("Telegram foydalanuvchi aniqlanmadi.");
+        tg.close();
+        return;
+      }
+
+      try {
+        const res = await fetch(" https://c14cf670a1b7.ngrok-free.app/check-subscription", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId }),
+        });
+
+        const data = await res.json();
+        if (!data.isSubscribed) {
+          alert("⛔ Iltimos, avval kanalga a'zo bo'ling: @IkromAbdulahad");
+          tg.close();
+        }
+      } catch (err) {
+        alert("❗ Tekshirishda xatolik. Keyinroq urinib ko'ring.");
+        tg.close();
+      }
+    });
+  </script>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+    iframe {
+      border: none;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <iframe
+    src="https://www.chatbase.co/chatbot-iframe/WsStgk1iZgU3aSbtlyysv"
+    allow="clipboard-write; microphone"
+  ></iframe>
+</body>
+</html>
